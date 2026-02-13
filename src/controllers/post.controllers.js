@@ -2,20 +2,45 @@
 const postModel=require('../models/post.model')
 const imageKit=require('@imagekit/nodejs')
 const {toFile}=require('@imagekit/nodejs')
-
+const jwt=require('jsonwebtoken')
 
 const imagekit=new imageKit({
     privateKey:process.env.IMAGEKIT_PRIVATE_KEY
 })
 
-async function createPostController(req,res){
 
-    const file=await imagekit.files.upload({
-        file:await toFile(Buffer.from(req.file.buffer),'file'),
+
+
+async function createPostController(req,res){
+    const token=req.cookies.token
+    if(!token){
+      return res.status(401).json({message:'Unauthorised : token not found'})
+
+      try{
+         const decoded= jwt.verify(token,process.env.JWT_SECRET) // to check if token is created using ur jwt_secret
+      }catch(err){
+         return res.status(401).json({message:"Unauthorised: invalid token"})
+      }
+
+    }
+    const file=await imagekit.files.upload({       //Uploads converted file to ImageKit cloud , which returns a resp obj named file
+        file:await toFile(                        //Converts buffer into file-like obj
+         Buffer.from(req.file.buffer),'file'      //
+      ),
         fileName:"Test"
     })
 
-    res.send(file)
+const post=await postModel.create({
+   caption:req.body.caption,
+   ImgUrl:file.url,
+   user:decoded.id
+
+})
+
+res.status(201).json({
+   message:'post created successfully',
+   post
+})
 
 }
 
@@ -28,27 +53,26 @@ IMAGE UPLOAD FLOW (IMPORTANT NOTES)
 1) Multer gives image as buffer → req.file.buffer (raw image data)
 
 2) toFile(buffer, 'file'):
-   - Converts buffer into a file-like object
-   - 'file' here is ONLY a temporary label (not real filename)
-   - It has NO relation with const file below
+   - Converts buffer into file-like obj
+   - 'file'--> ONLY a temporary label (not real)
+   - It has NO relation with const file 
 
 3) What is sent to ImageKit?
-   - Output of toFile() is sent
-   - NOT const file
-   - NOT the string 'file'
+   - Output of toFile() sent to imagekit
+   
 
 4) imagekit.files.upload():
    - Uploads converted file to ImageKit cloud
    - Returns a response object
 
 5) const file:
-   - This is the RESPONSE from ImageKit
-   - It is an object (metadata only)
-   - Contains: URL, id, name, size, etc.
-   - Does NOT contain actual image (.jpg/.png data)
+   - IMAGEKIT RESP 
+   - It is an object
+   - Contains: URL, id, name, size not the img file
+   
 
 6) fileName: "Test":
-   - This is the name used to store image on ImageKit
+   - name used to store image on ImageKit
    - Better: req.file.originalname (keeps real filename)
    - Best: Date.now() + originalname (avoids clashes)
 
