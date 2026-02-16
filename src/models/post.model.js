@@ -14,7 +14,7 @@ const postSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:[true,'user id is required']
     }
-    // ObjectId = stores MongoDB document ID
+    // ObjectId = stores MongoDB document ID, the type here is not string but a special type called objectid
     // ref = tells which collection this ID belongs to (for populate)
     // Together = link between posts and users
 
