@@ -3,7 +3,7 @@ const express=require('express')
 const postRouter=express.Router()
 
 const postController=require('../controllers/post.controllers')
-
+const identifyUser= require('../middlewares/identifyUser')
 const upload=require('../middlewares/upload')
 
 

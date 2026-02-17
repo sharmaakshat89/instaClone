@@ -66,9 +66,10 @@ const file = upload result
     const token=req.cookies.token
     if(!token){
       return res.status(401).json({message:'Unauthorised : token not found'})
+      let decoded= null
 
       try{
-         const decoded= jwt.verify(token,process.env.JWT_SECRET) // to check if token is created using ur jwt_secret
+          decoded= jwt.verify(token,process.env.JWT_SECRET) // to check if token is created using ur jwt_secret
       }catch(err){
          return res.status(401).json({message:"Unauthorised: invalid token"})
       }
@@ -84,7 +85,7 @@ const file = upload result
 const post=await postModel.create({
    caption:req.body.caption,
    ImgUrl:file.url,
-   user:decoded.id
+   user:req.user.id
 
 })
 
@@ -100,41 +101,16 @@ res.status(201).json({
 
 async function getPostController(req,res){
    
-   // 1. getting the token from the api user
-   const token=req.cookies.token
 
-   // 2.if token not found with the user , give him res here itself
-   if(!token){
-      return res.status(401).json({
-         message:"unauthorised access"
-      })
-   }
-   
-   // 3. initiating decoded here itself, because we need it outside the context of the try block also
-   let decoded=null 
-   
-   // 4. decoded is the object(data) we get which was created during this token generation  
-   try{
-         decoded=jwt.verify(token , process.env.JWT_SECRET)
-   
+   // 1. getting user id from decoded
+   const userId=req.user.id
 
-   }
-   // 5. send res 403 if token didnt match
-   catch(err){
-         return res.status(401).json({
-            message:'INVALID TOKEN, UNAUTHORISED'
-         })
-   }
-
-   // 6. getting user id from decoded
-   const userId=decoded.id
-
-   // 7. get all the posts which have (inside their schema) the users value of userId
+   // 2. get all the posts which have (inside their schema) the users value of userId
    const posts=await postModel.find({
       user:userId
    })
    
-   // 8. sending res as 200 and the posts along with it
+   // 3. sending res as 200 and the posts along with it
    res.status(200).json({
       message:"Posts fetched successfully.",
       posts
@@ -145,55 +121,32 @@ async function getPostController(req,res){
 
 async function getPostDetailsController(req,res){
 
-   // 1. first getting the token of the user who used this endpoint
-   const token=req.cookies.token 
-
-   // 2. if token not found with the user, give him a 401 res here itself
-   if(!token){ 
-      return res.status(401).json({
-         message:"unauthorised access"
-      })
-   }
-
-   // 3. initialising decoded here
-   let decoded
-
-   // 4. using jwt verify to get the data of the user who has this token
-   try{
-      decoded=jwt.verify(token,process.env.JWT_SECRET)
-   }
-   catch(err){
-      return res.status(401).json({
-         message:'unauthorised access'
-      })
-   }
-
-   // 5. getting user id from decoded and post id from the req params 
-   const userId=decoded.id
+   // 1. getting user id from decoded i.e req.user and post id from the req params 
+   const userId=req.user.id
    const postId=req.params.postId
 
-   // 6. getting the post with the id from postmodel collection 
+   // 2. getting the post with the id from postmodel collection 
    const post=await postModel.findById(postId)
 
-   // 7. if post not found send 404 resp
+   // 3. if post not found send 404 resp
    if (!post) {
       return res.status(404).json({
          message:"post not found"
       })
    }
 
-   // 8. checking if user req the post is looking at his own post
+   // 4. checking if user requesting the post is looking at his own post
    const isUserValid= post.user.toString()=== userId
    // .toString() => to conv an obj id (as post.user returns an obj id) to string , as userId is already a string
 
-   // 9. if not then sending 403 resp
+   // 5. if not then sending 403 resp
    if(!isUserValid){
       return res.status(403).json({
          message:"Forbidden Content"
       })
    }
 
-   // 10. if all checks passed then sending resp 200 and the post
+   // 6. if all checks passed then sending resp 200 and the post
    res.status(200).json({
       message:"Post fetched successfully",
       post
