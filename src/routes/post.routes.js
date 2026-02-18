@@ -15,6 +15,7 @@ postRouter.get('/details/:postid', identifyUser,postController.getPostDetailsCon
 postRouter.post('/',upload.single('image' ), identifyUser ,postController.createPostController)
 // upload.single('image')----> whatever is the name of key in which the pic is uploaded in the form @frontend is used here
 
+postRouter.post("/like/:postId", identifyUser , postController.likePostController)
 
 
 module.exports=postRouter   
