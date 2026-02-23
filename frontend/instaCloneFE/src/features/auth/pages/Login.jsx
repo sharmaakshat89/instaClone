@@ -1,23 +1,32 @@
 import React, { useState } from 'react'
 import '../styles/loginform.css'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import axios from 'axios'
-
+import { useAuth } from '../hooks/useAuth'
+import { useNavigate } from 'react-router'
+const useNavigate=useNavigate()
 
 const Login = () => {
 
+    const {user, loading , handleLogin}=useAuth()
+
     const[username,setUsername]=useState('')
-    const[email,setEmail]=useState('')
+    //const[email,setEmail]=useState('')
     const[password,setPassword]=useState('')
 
     async function handleSubmit(e) {
         e.preventDefault()
+        await handleLogin(username,password)
+        console.log('user logged in')
+        navigate('/') 
+    }
 
-        const res= await axios.post('http://localhost:3000/api/auth/login',{
-            username,email,password
-        },{withCredentials:true})
-        console.log(res.data)
-        
+    if(loading){
+        return (
+            <main>
+                <h1>LOADING....</h1>
+            </main>
+        )
     }
 
   return (
