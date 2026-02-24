@@ -1,0 +1,87 @@
+/* Parent Page Wrapper */
+.feed-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* The Feed Container */
+.feed-page .feed {
+  max-width: 300px;
+  width: 100%;
+}
+
+/* The List of Posts */
+.feed-page .feed .posts {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+/* Individual Post Card */
+.feed-page .feed .post {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: #312626;
+  padding-inline: 0.5rem;
+  padding-block: 0.5rem;
+}
+
+/* Post Image (Direct child of post) */
+.feed-page .feed .post img {
+  width: 100%;
+}
+
+/* User Profile Section inside Post */
+.feed-page .feed .post .user {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Colorful Border around User Avatar */
+.feed-page .feed .post .user .img-wrapper {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgba(255, 0, 0, 0);
+  background: conic-gradient(from 45deg, rgb(255, 102, 0), rgb(105, 0, 128), rgb(255, 102, 0)) border-box;
+}
+
+/* User Avatar Image */
+.feed-page .feed .post .user img {
+  width: 2rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+}
+
+/* Icon Bar (Like, Comment, etc.) */
+.feed-page .feed .post .icons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.feed-page .feed .post .icons .left {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.feed-page .feed .post .icons .like {
+  color: red;
+}
+
+.feed-page .feed .post .icons svg {
+  width: 1rem;
+  aspect-ratio: 1/1;
+  color: white;
+}
+
+.feed-page .feed .post .icons button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}

@@ -1,12 +1,12 @@
 import { useContext } from "react";
-import { authContext } from "../auth.context";
+import { AuthContext } from "../auth.context";
 import {login,register} from '../services/auth.api'
 
 // this being the HOOK layer, it manages both the api and the context
 
 export const useAuth = () =>{
 
-    const context=useContext(authContext) // getting the context we created in auth.context.js
+    const context=useContext(AuthContext) // getting the context we created in auth.context.js
 
     const {user, setUser , loading , setLoading} = context // getting them in destruc obj form
 

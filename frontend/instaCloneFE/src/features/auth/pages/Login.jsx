@@ -3,11 +3,11 @@ import '../styles/loginform.css'
 import { Link, useNavigate } from 'react-router'
 import axios from 'axios'
 import { useAuth } from '../hooks/useAuth'
-import { useNavigate } from 'react-router'
-const useNavigate=useNavigate()
+
+
 
 const Login = () => {
-
+    const navigate=useNavigate()
     const {user, loading , handleLogin}=useAuth()
 
     const[username,setUsername]=useState('')

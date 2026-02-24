@@ -56,7 +56,7 @@ async function loginController(req,res){
 
     const user= await userModel.findOne({
         $or:[{username},{email}]
-    })
+    }).select('+password') //this forces the query to read the password that has not been permitted by the model
 
     if(!user){
         return res.status(404).json({

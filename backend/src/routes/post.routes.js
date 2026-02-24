@@ -18,4 +18,6 @@ postRouter.post('/',upload.single('image' ), identifyUser ,postController.create
 postRouter.post("/like/:postId", identifyUser , postController.likePostController)
 
 
+postRouter.get('/feed' , identifyUser , postController.getFeedController)
+
 module.exports=postRouter   

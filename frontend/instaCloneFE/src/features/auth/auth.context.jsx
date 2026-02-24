@@ -1,18 +1,18 @@
 import { createContext,useState } from "react";
 // this is the state layer, stores our data
 
-export const authContext=createContext()
+export const AuthContext=createContext()
 //context created here
 
-export const authProvider=({children})=>{
+export const AuthProvider=({children})=>{
 
     const [user , setUser] = useState(null)
     const [loading , setLoading] = useState(null)
 
 
     return (
-        <authContext.Provider value={{user, setUser, loading , setLoading}} >
+        <AuthContext.Provider value={{user, setUser, loading , setLoading}} >
             {children}
-        </authContext.Provider>
+        </AuthContext.Provider>
     )
 }
